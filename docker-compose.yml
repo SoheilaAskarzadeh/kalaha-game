@@ -1,0 +1,56 @@
+version: '3'
+services:
+  kalaha-api:
+    build:
+      context: ./kalaha-api
+      dockerfile: Dockerfile
+    image: kalaha-api:latest
+    container_name: "kalaha-api"
+    ports:
+      - "7001:7001"
+    environment:
+      SPRING_DATA_MONGO_URI: mongodb://mongodb:27017/kalaha_db
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+    depends_on:
+      - mongodb
+      - eureka-server
+    networks:
+      - kalaha-network
+  mongodb:
+    image: mongo:latest
+    container_name: "mongodb"
+    ports:
+      - "27017:27017"
+    networks:
+      - kalaha-network
+  eureka-server:
+    build:
+      context: ./eureka-server
+      dockerfile: Dockerfile
+    image: eureka-server:latest
+    container_name: "eureka-server"
+    ports:
+      - 8761:8761
+    networks:
+      - kalaha-network
+  kalaha-ui:
+    build:
+      context: ./kalaha-ui
+      dockerfile: Dockerfile
+    image: kalaha-ui:latest
+    container_name: "kalaha-ui"
+    links:
+      - kalaha-api
+      - eureka-server
+    ports:
+      - 7002:7002
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+    networks:
+      - kalaha-network
+networks:
+  kalaha-network:
+    driver: bridge
+
+    
+   
