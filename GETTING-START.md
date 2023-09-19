@@ -35,7 +35,8 @@
    
         mvn clean package
      
-     ##### As kalaha-ui using kalaha-api jar for kalaha-api run this command 'mvn clean install', notice that kalaha-ui should build after kalaha-api     
+     ##### To use 'kalaha-ui,' please note that it requires the 'kalaha-api' jar. First, run the command 'mvn clean install' for 'kalaha-api.'
+     ##### Please note that 'kalaha-ui' should be built after 'kalaha-api.'     
         
 4. Run:
    
