@@ -218,6 +218,32 @@ class GameServiceImplTest {
 	}
 
 	@Test
+	void move_handleOpposite_onOpponentHouse(){
+		var game=createGame(PlayerNumber.TWO,2);
+		when(gameRepository.findById("gameId")).thenReturn(Optional.of(game));
+		var request=new PlayRequestModel("gameId",9);
+		var response=gameService.move(request);
+		assertThat(response).isNotNull();
+		assertThat(response.getStatus()).isEqualTo(Status.ACTIVE);
+		assertThat(response.getPits()).hasSizeGreaterThan(0);
+		var pits= response.getPits();
+		assertThat(pits.get(0).getStones()).isEqualTo(1);
+		assertThat(pits.get(1).getStones()).isEqualTo(1);
+		assertThat(pits.get(2).getStones()).isEqualTo(8);
+		assertThat(pits.get(3).getStones()).isEqualTo(8);
+		assertThat(pits.get(4).getStones()).isEqualTo(8);
+		assertThat(pits.get(5).getStones()).isEqualTo(8);
+		assertThat(pits.get(6).getStones()).isEqualTo(2);
+		assertThat(pits.get(7).getStones()).isEqualTo(7);
+		assertThat(pits.get(8).getStones()).isZero();
+		assertThat(pits.get(9).getStones()).isEqualTo(7);
+		assertThat(pits.get(10).getStones()).isEqualTo(7);
+		assertThat(pits.get(11).getStones()).isEqualTo(7);
+		assertThat(pits.get(12).getStones()).isEqualTo(7);
+		assertThat(pits.get(13).getStones()).isEqualTo(1);
+	}
+
+	@Test
 	void move_handleComplete(){
 		var game=createGame();
 		when(gameRepository.findById("gameId")).thenReturn(Optional.of(game));
@@ -289,6 +315,35 @@ class GameServiceImplTest {
 
 		return game;
 	}
+
+	private Game createGame(PlayerNumber player,Integer storeStones){
+		var game=new Game();
+		game.setId("gameId");
+		game.setStatus(Status.ACTIVE);
+		game.setPlayer(player);
+		Store storePlayerOne=new Store(7,PlayerNumber.ONE);
+		storePlayerOne.setStones(storeStones);
+		Store storePlayerTwo=new Store(14,PlayerNumber.TWO);
+		storePlayerTwo.setStones(0);
+		game.setPits(Arrays.asList(
+				new House(1, 0,PlayerNumber.ONE),
+				new House(2, 0,PlayerNumber.ONE),
+				new House(3, 8,PlayerNumber.ONE),
+				new House(4, 8,PlayerNumber.ONE),
+				new House(5, 8,PlayerNumber.ONE),
+				new House(6, 8,PlayerNumber.ONE),
+				storePlayerOne,
+				new House(8, 7,PlayerNumber.TWO),
+				new House(9, 7,PlayerNumber.TWO),
+				new House(10, 6,PlayerNumber.TWO),
+				new House(11, 6,PlayerNumber.TWO),
+				new House(12, 6,PlayerNumber.TWO),
+				new House(13, 6,PlayerNumber.TWO),
+				storePlayerTwo));
+
+		return game;
+	}
+
 
 	private Game createGame(){
 		var game=new Game();
