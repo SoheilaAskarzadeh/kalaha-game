@@ -115,7 +115,7 @@ public class GameServiceImpl implements GameService {
 
 		Pit oppositePit = game.getPit(KalahaConstant.PLAYER_TWO_STORE - currentPitIndex);
 		// handle opposite's pit's rule
-		if (Boolean.TRUE.equals(targetPit.isEmpty()) && Boolean.FALSE.equals(oppositePit.isEmpty())) {
+		if (Boolean.TRUE.equals(targetPit.isEmpty()) && targetPit.getOwner().equals(game.getPlayer()) && Boolean.FALSE.equals(oppositePit.isEmpty())) {
 			logger.info("handle opposite rule for gameId: {} , pitIndex: {}",game.getId(),currentPitIndex);
 			int oppositeStones = oppositePit.getStones();
 			oppositePit.clear();
